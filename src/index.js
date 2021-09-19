@@ -23,6 +23,7 @@ function onSearch(e) {
 }
 
 function quantityCheckCountries(country) {
+  console.log(country);
   if (country.status === 404) {
     refs.cardContainer.innerHTML = '';
     alert({ text: 'Can you be norm?!!' });
