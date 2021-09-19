@@ -23,7 +23,6 @@ function onSearch(e) {
 }
 
 function quantityCheckCountries(country) {
-  /* console.log(country); */
   if (country.status === 404) {
     refs.cardContainer.innerHTML = '';
     alert({ text: 'Can you be norm?!!' });
@@ -34,14 +33,37 @@ function quantityCheckCountries(country) {
     return;
   } else if (country.length > 1) {
     refs.cardContainer.innerHTML = countriesListTpl(country);
+    clickBylist();
     return;
   }
   refs.cardContainer.innerHTML = countryCardTpl(country);
-  /* const title = document.querySelector('.card-title');
-  console.log(title.style); */
 }
-
 function onFetchError(err) {
   refs.cardContainer.innerHTML = '';
   alert({ text: 'Come on baby, press the button!!' });
 }
+
+////
+
+/* const newPromis = () => {
+  return fetch(document.querySelector('.list-group'));
+}; */
+
+const clickBylist = function () {
+  const promise = new Promise(resolve => {
+    resolve(document.querySelector('.list-group'));
+  });
+
+  promise.then(data => {
+    data.addEventListener('click', tryThis);
+    function tryThis(e) {
+      if (e.target.localName === 'li') {
+        refs.searchForm.value = e.target.textContent;
+        API.fetchCountry(e.target.textContent).then(quantityCheckCountries);
+
+        return;
+      }
+      return;
+    }
+  });
+};
