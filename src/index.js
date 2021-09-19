@@ -1,42 +1,46 @@
-import './sass/main.scss';
+import countriesListTpl from './plagin/countriesList.hbs';
+import countryCardTpl from './plagin/countryCard.hbs';
+import API from './js/fetchCountries';
+import getRefs from './js/startrefs';
+const refs = getRefs();
 
-const colors = ['#FFFFFF', '#2196F3', '#4CAF50', '#FF9800', '#009688', '#795548'];
-const startButtonSwitch = document.querySelector('[data-action="start"]');
-const stopButtonSwitch = document.querySelector('[data-action="stop"]');
-const body = document.querySelector('body');
+import { alert, error, defaultModules } from '@pnotify/core/dist/PNotify.js';
+import * as PNotifyMobile from '@pnotify/mobile/dist/PNotifyMobile.js';
+import '@pnotify/core/dist/PNotify.css';
+import '@pnotify/core/dist/BrightTheme.css';
+defaultModules.set(PNotifyMobile, {});
+import { defaults } from '@pnotify/core';
+defaults.width = '400px';
+defaults.delay = '3000';
+defaults.minHeight = '86px';
 
-class ObjColorsSwitch {
-  constructor(colors, startBtn, stopBtn, place) {
-    this.colors = colors;
-    this.place = place;
-    this.intervalId = null;
-    this.startBtn = startBtn;
-    this.stopBtn = stopBtn;
-  }
+var debounce = require('lodash.debounce');
 
-  randomIntegerFromInterval(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-  placeColor() {
-    this.place.style.backgroundColor =
-      this.colors[this.randomIntegerFromInterval(0, this.colors.length - 1)];
-  }
-  startSwitch() {
-    this.startBtn.addEventListener('click', () => {
-      this.intervalId = setInterval(() => {
-        this.placeColor(this.place);
-      }, 1000);
-      this.startBtn.disabled = true;
-    });
-  }
-  stopSwitch() {
-    this.stopBtn.addEventListener('click', () => {
-      clearInterval(this.intervalId);
-      this.startBtn.disabled = false;
-    });
-  }
+refs.searchForm.addEventListener('input', debounce(onSearch, 500));
+
+function onSearch(e) {
+  API.fetchCountry(e.target.value).then(quantityCheckCountries).catch(onFetchError);
 }
 
-const myFetch = new ObjColorsSwitch(colors, startButtonSwitch, stopButtonSwitch, body);
-myFetch.startSwitch();
-myFetch.stopSwitch();
+function quantityCheckCountries(country) {
+  if (country.status === 404) {
+    refs.cardContainer.innerHTML = '';
+    alert({ text: 'Can you be norm?!!' });
+    return;
+  } else if (country.length > 10) {
+    refs.cardContainer.innerHTML = '';
+    error({ text: 'Please enter a more specific query!' });
+    return;
+  } else if (country.length > 1) {
+    refs.cardContainer.innerHTML = countriesListTpl(country);
+    return;
+  }
+  refs.cardContainer.innerHTML = countryCardTpl(country);
+  const title = document.querySelector('.card-title');
+  console.log(title.style);
+}
+
+function onFetchError(err) {
+  refs.cardContainer.innerHTML = '';
+  alert({ text: 'Come on baby, press the button!!' });
+}
