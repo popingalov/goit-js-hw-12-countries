@@ -23,7 +23,7 @@ function onSearch(e) {
 }
 
 function quantityCheckCountries(country) {
-  console.log(country);
+  /* console.log(country); */
   if (country.status === 404) {
     refs.cardContainer.innerHTML = '';
     alert({ text: 'Can you be norm?!!' });
@@ -37,8 +37,8 @@ function quantityCheckCountries(country) {
     return;
   }
   refs.cardContainer.innerHTML = countryCardTpl(country);
-  const title = document.querySelector('.card-title');
-  console.log(title.style);
+  /* const title = document.querySelector('.card-title');
+  console.log(title.style); */
 }
 
 function onFetchError(err) {
