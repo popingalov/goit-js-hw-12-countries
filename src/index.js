@@ -1,9 +1,9 @@
+import getRefs from './js/startrefs';
 import countriesListTpl from './plagin/countriesList.hbs';
 import countryCardTpl from './plagin/countryCard.hbs';
 import API from './js/fetchCountries';
-import getRefs from './js/startrefs';
 const refs = getRefs();
-
+var debounce = require('lodash.debounce');
 import { alert, error, defaultModules } from '@pnotify/core/dist/PNotify.js';
 import * as PNotifyMobile from '@pnotify/mobile/dist/PNotifyMobile.js';
 import '@pnotify/core/dist/PNotify.css';
@@ -13,8 +13,6 @@ import { defaults } from '@pnotify/core';
 defaults.width = '400px';
 defaults.delay = '3000';
 defaults.minHeight = '86px';
-
-var debounce = require('lodash.debounce');
 
 refs.searchForm.addEventListener('input', debounce(onSearch, 500));
 
