@@ -17,6 +17,11 @@ defaults.minHeight = '86px';
 refs.searchForm.addEventListener('input', debounce(onSearch, 500));
 
 function onSearch(e) {
+  if (e.target.value.trim().length === 0) {
+    alert({ text: 'Для тебя страна пустое место?!!!Нужны букавки!' });
+    e.target.value = '';
+    return;
+  }
   API.fetchCountry(e.target.value).then(quantityCheckCountries).catch(onFetchError);
 }
 
